@@ -16,8 +16,19 @@ class Airline(models.Model):
     def __str__(self):
         return self.name
 
+class Air_travel(models.Model):
+    flight_number = models.CharField(max_length=200)
+    airline = models.ForeignKey(Airline, on_delete=models.CASCADE)
+    departure = models.CharField(max_length=200)
+    arrival = models.CharField(max_length=200)
+    type = models.CharField(max_length=1, choices=AIR_TRAVEL_TYPES, default=AIR_TRAVEL_TYPES[0])
+    gate_number = models.CharField(max_length=200)
+
+    date = models.DateTimeField(null=True)
+
+
 class Passenger(models.Model):
-    passenger = models.ForeignKey(User, on_delete=models.CASCADE)
+    passenger = models.ForeignKey(User, on_delete=models.CASCADE,related_name="passenger")
     ticket = models.CharField(max_length=200, null=True)
     Air_travel = models.ForeignKey(Air_travel, on_delete=models.CASCADE)
 
@@ -26,20 +37,10 @@ class Passenger(models.Model):
 
     def __str__(self):
         return "{}, {}".format(self.name, self.start_time)
-
-class Air_travel(models.Model):
-    flight_number, = models.CharField(max_length=200)
-    airline = models.ForeignKey(Airline, on_delete=models.CASCADE)
-    departure = models.CharField(max_length=200)
-    arrival = models.CharField(max_length=200)
-    type = models.CharField(max_length=1, choices=AIR_TRAVEL_TYPES, default=AIR_TRAVEL_TYPES[0])
-    gate_number = models.CharField(max_length=200)
-
-    date = models.DateTimeField(null=True)
     
     
 
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE,related_name="creator")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
