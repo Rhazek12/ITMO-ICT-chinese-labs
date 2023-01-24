@@ -13,10 +13,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from django.shortcuts import get_object_or_404
 
 from .serializers import (
     User_serializer,Airline_serializer,Passenger_serializer,Review_serializer,Air_travel_serializer,CustomTokenObtainPairSerializer,user_token
 )
+
+from .models import *
 
 from django.contrib.auth.models import User
 
@@ -53,7 +56,7 @@ class Login(TokenObtainPairView):
             if user.is_active:
                 if login_serializer.is_valid():
                     user_serializer = user_token(user)
-                    
+                    print(user_serializer.data)
                     return Response({
                         'token': login_serializer.validated_data.get('access'),
                         'refresh-token': login_serializer.validated_data.get('refresh'),
@@ -81,6 +84,18 @@ class Logout(GenericAPIView):
             RefreshToken.for_user(user.first())
             return Response({'message': 'logged out successfully'}, status=status.HTTP_200_OK)
         return Response({'error': 'user does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# A viewset for handling the listing of a user's air travel information.
+
+class list_my_air_travel(viewsets.ModelViewSet):
+    serializer_class = Passenger_serializer
+    permission_classes = (IsAuthenticated,)
+    queryset = Passenger_serializer.Meta.model.objects.all()  
+# Retrieve air travel information for a specific user.
+    def retrieve(self, request,pk=None):
+        travels = Passenger.objects.filter(passenger = pk).values()
+        return Response ( travels)
 
 
 # The Airline_viewsets, Passenger_viewsets, Review_viewsets, User_viewsets, 

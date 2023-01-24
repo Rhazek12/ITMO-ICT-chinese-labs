@@ -34,15 +34,12 @@ class Passenger(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    creator = models.ForeignKey(User, on_delete=models.CASCADE,related_name="creator", null=True)
+    
+    
     def __str__(self):
-        return "{}, {}".format(self.name, self.start_time)
-    
-    
+        return str(self.ticket)
 
-    creator = models.ForeignKey(User, on_delete=models.CASCADE,related_name="creator")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Review(models.Model):

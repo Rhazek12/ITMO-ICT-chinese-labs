@@ -7,10 +7,14 @@
 <script>
 import DataTable from './components/flyCard.vue';
 
+
 export default {
   name: 'App',
+
+
   components: {
-    DataTable,
+    DataTable
   },
+  
 };
 </script>
